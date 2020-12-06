@@ -7,17 +7,46 @@
 </head>
 <body>
     <div id="root">
-        <p>我是p标签</p>
-        <div>我是div标签</div>
+        <p>我是{{data.name}}--{{data.age}}岁</p>
+        <div>
+            <div>{{data.message}}</div>
+        </div>
     </div>
     <script>
         let root = document.querySelector('#root');
-        function getDom(root){
-            //childrenList
-            let childrenList = root.children;
-           
+        let data = {
+            name: 'zs',
+            age: 40,
+            message: '我是内部div'
+        };
+        let reg = /\{\{(.+?)\}\}/g;
+        //用深克隆dom的方法生成新的模板，dom是引用类型
+        let newRoot = root.cloneNode(true);
+        function compiler(root, data){
+            //childrenList是伪元素操作不了数组方法
+            let childrenList = root.childNodes;
+            for(let i = 0; i < childrenList.length; i++){
+                if(childrenList[i].nodeType === 1){
+                    //元素节点 判断有无子元素有的话继续递归
+                    compiler(childrenList[i], data);
+                }else if(childrenList[i].nodeType === 3){
+                    //文本节点
+                    let valueText = childrenList[i].nodeValue;
+                    valueText = valueText.replace(reg, (hold, group) => {
+                        //第一个参数是匹配的内容，后面的要替换的内容匹配到一次就会执行一次回调
+                        return eval(group);
+                    })
+                    childrenList[i].nodeValue = valueText;
+                }
+            }
         }
-        getDom(root)
+
+        console.log(root);
+        compiler(newRoot, data);
+        //替换原来的模板;
+        root.parentNode.replaceChild(newRoot, root)
+        console.log(newRoot);
+        
     </script>
 </body>
 </html>
