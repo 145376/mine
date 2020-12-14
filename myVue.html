@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p>我是{{data.name}}--{{data.age}}岁</p>
+        <div>
+            <div>{{data.message}}</div>
+        </div>
+    </div>
+    <script>
+        // 思路: 先创建构造函数传入对象参数,根据参数中的 el获取dom模板 克隆出伪模板传入compailer函数， data生成数据源 利用compailer函数替换模板中的数据，最后用伪模板替换真实的模板
+        let reg = /\{\{(.+?)\}\}/g;
+        function compailer(root, data){
+            let childNodesList = root.childNodes;
+            for(let i = 0; i < childNodesList.length; i++){
+                if(childNodesList[i].nodeType === 1){
+                    //元素节点 如果有子元素就继续递归
+                    compailer(childNodesList[i], data);
+                }else if(childNodesList[i].nodeType === 3){
+                    //文本节点 如果是文本节点就替换文本
+                    let valueText = childNodesList[i].nodeValue;
+                    valueText = valueText.replace(reg, (hold, text) => { 
+                        return eval(text); 
+                    });
+                    childNodesList[i].nodeValue = valueText
+                    console.log(childNodesList[i]);
+                }
+            }
+        } ;
+        // 准备构造函数
+        function MyVue(options){
+            this._el = options.el;
+            this._data = options.data;
+            //dom模板
+            this._domTemplate = document.querySelector( this._el );
+            this.render();
+        };
+        //渲染函数
+        MyVue.prototype.render = function(){
+            this.compailer();
+        };
+        //编译函数
+        MyVue.prototype.compailer = function(){
+            let cloneTemplate =  this._domTemplate.cloneNode(true);
+            compailer(cloneTemplate, this._data);
+            this.update(cloneTemplate);
+        }
+        //跟新函数
+        MyVue.prototype.update = function(template){
+            this._domTemplate.parentNode.replaceChild(template, this._domTemplate);
+        }
+        //创建实例
+        let app = new MyVue({
+            el: '#app',
+            data:{
+                name: 'zs',
+                age: 20,
+                message: '我是消息内容'
+            }
+        })
+    </script>
+</body>
+</html>
