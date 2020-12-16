@@ -31,13 +31,13 @@
                     compiler(childrenList[i], data);
                 }else if(childrenList[i].nodeType === 3){
                     //文本节点
-                    let valueText = childrenList[i].nodeValue;
-                    valueText = valueText.replace(reg, (hold, group) => {
-                        //第一个参数是匹配的内容，后面的要替换的内容匹配到一次就会执行一次回调
-                        return eval(group);
-                    })
-                    childrenList[i].nodeValue = valueText;
-                    console.log(childrenList[i]);
+                    let valueText = childNodesList[i].nodeValue;
+                    valueText = valueText.replace(reg, (hold, text) => {
+                        let value = data[text.trim()];
+                        return value
+                    });
+                    console.log(data, valueText);
+                    childNodesList[i].nodeValue = valueText;
                 }
             }
         }

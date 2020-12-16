@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root">
+        <p>我是文本</p>
+        <div>
+            <div>我是子元素</div>
+        </div>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+    </div>
+    <script>
+        /**
+        * desc: 创建虚拟dom
+        * 参数: tag-->标签元素(div) text-->文本元素  data-->元素属性  type-->元素类别  children-->子元素
+        */
+        debugger
+        let root = document.querySelector('#root');
+        class VNode{
+            constructor(tag, text, data, type, children){
+                this.tag = tag && tag.toLowerCase();
+                this.text = text;
+                this.data = data;
+                this.type = type;
+                this.children = [];
+            }
+
+            appenChild(vnode){
+                this.children.push(vnode);
+            }
+        }
+        function generateVirtualDom(node){
+            let nodeType = node.nodeType;
+            let _VNode = null;
+            if(nodeType === 1){
+                //元素类型 如果有子元素就继续递归
+                let attrsObj = {};
+                for(let i = 0 ; i < node.attributes.length ; i++){
+                    attrsObj[node.attributes[i].nodeName] = node.attributes[i].nodeValue;
+                }
+                _VNode = new VNode(node.nodeName, undefined, attrsObj, nodeType);
+                let childrenList = node.childNodes;
+                for(let i = 0 ; i < childrenList.length ; i++){
+                   _VNode.appenChild(generateVirtualDom(childrenList[i]));
+                }
+            } else if(nodeType === 3){
+                //文本类型
+                _VNode = new VNode(undefined, node.nodeValue, undefined, nodeType);
+            }
+            return _VNode
+        }
+        let vroot = generateVirtualDom(root);
+        console.log(vroot);
+    </script>
+</body>
+</html>
