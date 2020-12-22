@@ -31,23 +31,36 @@
                     compiler(childrenList[i], data);
                 }else if(childrenList[i].nodeType === 3){
                     //文本节点
-                    let valueText = childNodesList[i].nodeValue;
+                    let valueText = childrenList[i].nodeValue;
                     valueText = valueText.replace(reg, (hold, text) => {
                         let value = data[text.trim()];
                         return value
                     });
-                    console.log(data, valueText);
-                    childNodesList[i].nodeValue = valueText;
+                    // console.log(data, valueText);
+                    childrenList[i].nodeValue = valueText;
                 }
             }
         }
 
-        console.log(root);
+        // console.log(root);
         compiler(newRoot, data);
         //替换原来的模板;
         root.parentNode.replaceChild(newRoot, root)
-        console.log(newRoot);
+        // console.log(newRoot);
         
+        function fn(a, b){
+            return function(c){
+                return a(b(c))
+            }
+        }
+        function a(_b){
+            return _b + 1
+        }
+        function b(_c){
+            return _c + 1
+        }
+        let res = fn(a, b)(3)
+        console.log(res);
     </script>
 </body>
 </html>

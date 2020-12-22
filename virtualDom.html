@@ -8,8 +8,8 @@
 <body>
     <div id="root">
         <p>我是文本</p>
-        <div>
-            <div>我是子元素</div>
+        <div class="father">
+            <div class="son">我是子元素</div>
         </div>
         <ul>
             <li>1</li>
@@ -22,7 +22,7 @@
         * desc: 创建虚拟dom
         * 参数: tag-->标签元素(div) text-->文本元素  data-->元素属性  type-->元素类别  children-->子元素
         */
-        debugger
+        // debugger
         let root = document.querySelector('#root');
         class VNode{
             constructor(tag, text, data, type, children){
@@ -58,7 +58,28 @@
             return _VNode
         }
         let vroot = generateVirtualDom(root);
-        console.log(vroot);
+        // console.log(vroot);
+        //转换成真实dom
+        function parseVnode(vnode){
+            let _node = null;
+            if(vnode.type === 3){
+                //创建文本节点
+                return document.createTextNode(vnode.text);
+            }else if(vnode.type === 1){
+                //创建元素节点
+                _node = document.createElement(vnode.tag);
+                //转换元素属性
+                Object.keys(vnode.data).forEach(item => {
+                    _node.setAttribute(item, vnode.data[item]);
+                })
+                vnode.children.forEach(item => {
+                    _node.appendChild( parseVnode(item) );
+                })
+            }
+            return _node
+        }
+        let dom = parseVnode( vroot );
+        console.log(dom);
     </script>
 </body>
 </html>
