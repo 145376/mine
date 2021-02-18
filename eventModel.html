@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let eventObjs = {};
+        let event = (function(){
+            return {
+                on(type, handler){
+                    ( eventObjs[type] || ( eventObjs[type] = [] ) ).push(handler); // 如果有该事件则为该事件添加方法若没有则初始化事件对象再添加方法
+                },
+                off(type, handler){
+                    if( arguments.length === 0 ){   //如果没有传参注销全部事件
+                        eventObjs = {};
+                    }else if( arguments.length === 1 ){   //如果只传入type则注销该类型下的所有方法
+                        eventObjs[type] = [];
+                    }else if( arguments.length === 2 ){ //注销某一个事件下的某一个方法
+                        let events = eventObjs[type];
+                        for(let i = events.length - 1; i >= 0; i--){
+                            if( events[i] === handler ){
+                                events.splice( i, 1 )
+                            }
+                        }
+                    }
+                },
+                emit(type){  //触发方法
+                    let args = Array.prototype.slice.call(arguments, 1);
+                    let events = eventObjs[type];
+                    if( !events ) return;
+                    for (let i = 0; i < events.length; i++) {
+                        events[i].apply(null, args);
+                    } 
+                }
+            }
+        }())
+
+        function f1(){
+            console.log('事件1')
+        }
+        function f2() {
+            console.log('事件2')
+        }
+        function f3() {
+            console.log('事件2')
+        }
+        function f4() {
+            console.log('事件1')
+        }
+        event.on('click', f1);
+        event.on('click', f2);
+        event.on('click', f3);
+        event.on('click', f4);
+
+        //数组倒循环 避免下标被改变
+        // let arr = [1,2,3,4,2,5,2];
+        // arr.forEach( ( v, i ) => {
+        //     if(v === 2) arr.splice(i, 1);
+        // } )
+        // for(let i = arr.length - 1; i >= 0; i--){
+        //     if (arr[i] === 2 || arr[i] === 1) arr.splice(i, 1);
+        // }
+        // console.log(arr);
+    </script>
+</body>
+</html>
