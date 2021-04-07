@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //vue中的功能函数
+    const once = (fn) => {
+      //只调用一次
+      let called = false
+      return function(){
+        if(!called){
+          called = true
+          fn.apply(this, arguments)
+        }
+      }
+    }
+
+    const hypentocamelize = (str) => {
+      //连字符转驼峰
+      let reg = /-(\w)/g
+      return str.replace(reg, (_, c) => c ? c.toUpperCase() : '')
+    }
+
+    // let fnOnce = once(() => {
+    //   console.log('1111');
+    // })
+    // fnOnce()
+    // fnOnce()
+    // fnOnce()
+
+      let str = hypentocamelize('a-b-c')
+      console.log(str);
+  </script>
+</body>
+</html>
