@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 模拟vue 使用defineproperty对对象进行拦截访问
+    let obj = {
+      foo: 'hahah',
+      name: 'zs',
+      age: 20,
+      tall: 'hight'
+    };
+    // realVal = obj.foo
+    // Object.defineProperty( obj, 'foo', {
+    //   get(){
+    //     console.log( '被访问了' );
+    //     return realVal
+    //   },
+    //   set( newVal ){
+    //     realVal = newVal
+    //     console.log('被改变了', newVal);
+    //   }
+    // } )
+
+    function convert( data ){
+      for( let k in data ){
+        let realVal = data[ k ]
+        Object.defineProperty( data, k, {
+          get(){
+            console.log('我被访问了');
+            return realVal
+          },
+          set( newVal ){
+            console.log('我被改变了');
+            realVal = newVal
+          }
+        } )
+      }
+    }
+    convert( obj )
+  </script>
+</body>
+</html>

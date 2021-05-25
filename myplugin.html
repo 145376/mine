@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <input type="text" v-model="name" @blur="checkout">
+    <p>{{ message }}</p>
+  </div>
+  <script src="./node_modules/vue/dist/vue.js"></script>
+  <script>
+    let myPlugin = {
+      install( Vue ){
+        Vue.mixin({
+          data(){
+            return {
+              message: ''
+            }
+          },
+          created(){
+            // Object.keys( this.$options.rules ).forEach( v => {
+            //   let rule = this.$options.rules[ v ]
+            //   this.$watch( v, newVal => {
+            //     let result = rule.vaildate( newVal )
+            //     if( !result ) this.message = rule.message
+            //   }, {
+            //     immediate: true
+            //   } )
+            // } );
+          },
+          methods:{
+            checkout(){
+              Object.keys(this.$options.rules).forEach(v => {
+                let rule = this.$options.rules[v]
+                this.$watch(v, newVal => {
+                  let result = rule.vaildate(newVal)
+                  if (!result) this.message = rule.message
+                }, {
+                  immediate: true
+                })
+              });
+            }
+          }
+        })
+      }
+    }
+
+    Vue.use( myPlugin )
+
+    let app = new Vue({
+      el: "#app",
+      data:{
+        name: 'zs'
+      },
+      rules:{
+        name: {
+          vaildate: value => value.length < 12,
+          message:  '用户名长度不能大于12个字符'
+        }
+      }
+    })
+  </script>
+</body>
+</html>

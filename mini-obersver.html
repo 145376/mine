@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p></p>
+  <button>点击修改姓名</button>
+  <script>
+    let state = {
+      name: 'zs',
+      age: 20
+    }
+    window.Dep = class Dep{
+      constructor(){
+        this.subscribe = new Set()
+      }
+
+      depend(){
+        if( actvieUpdate ){
+          this.subscribe.add( actvieUpdate )
+        }
+      }
+
+      notify(){
+        this.subscribe.forEach( v => v() )
+      }
+    }
+
+    let actvieUpdate;
+
+    function obersver( data ){
+      let dep = new Dep()
+      Object.keys( data ).forEach( v => {
+        let realVal = data[ v ]
+        Object.defineProperty( data, v, {
+          get(){
+            //收集依赖
+            console.log('属性被访问了');
+            dep.depend()
+            return realVal
+          },
+          set( newVal ){
+            console.log('属性被设置了', newVal);
+            realVal = newVal
+            //发布跟新
+            dep.notify()
+          }
+        } )
+      } )
+    }
+
+    function autorun( update ){
+      // function wraapUpdate(){
+        // actvieUpdate = wraapUpdate
+        // update()
+        // actvieUpdate = null
+      // }
+      // wraapUpdate()
+      actvieUpdate = update
+      update()
+      actvieUpdate = null
+    }
+
+    obersver( state )
+
+    document.querySelector('button').onclick = () => {
+      state.name = 'ls'
+    }
+
+    function render(){
+      document.querySelector('p').innerText = state.name
+    }
+
+    autorun( render )
+  
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //模拟实现vue依赖追踪 Dep类用来收集依赖 autorun 用来绑定依赖关系
+    window.Dep = class Dep{
+      constructor(){
+        this.subscribes = new Set()
+      }
+
+      depend(){
+        if( activeUpdate ){
+          this.subscribes.add( activeUpdate )
+        }
+      }
+
+      notify(){
+        subscribes.forEach( v => v() );
+      }
+    }
+
+    let activeUpdate;
+
+    function autorun( update ){
+      function wrappUpdate(){
+        //因为js是单线程, 所以用变量储存当前正在运行的函数
+        activeUpdate = wrappUpdate
+        update()
+        activeUpdate = null
+      }
+      wrappUpdate()
+    }
+
+    let dep = new Dep()
+
+    autorun( () => {
+      dep.depend()
+      console.log('update');
+    } )
+
+    dep.notify()
+  </script>
+</body>
+</html>

@@ -26,6 +26,10 @@
       return str.replace(reg, (_, c) => c ? c.toUpperCase() : '')
     }
 
+    const formatMoney = (num) => { 
+      return num.toLocaleString()
+    }
+
     // let fnOnce = once(() => {
     //   console.log('1111');
     // })
@@ -33,8 +37,11 @@
     // fnOnce()
     // fnOnce()
 
-      let str = hypentocamelize('a-b-c')
-      console.log(str);
+    // let str = hypentocamelize('a-b-c')
+    // console.log(str);
+
+    let num = formatMoney(10000000.11111111)
+    console.log(num);
   </script>
 </body>
 </html>
