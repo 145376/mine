@@ -27,22 +27,32 @@
     //   }
     // } )
 
-    function convert( data ){
-      for( let k in data ){
-        let realVal = data[ k ]
-        Object.defineProperty( data, k, {
-          get(){
-            console.log('我被访问了');
-            return realVal
-          },
-          set( newVal ){
-            console.log('我被改变了');
-            realVal = newVal
-          }
-        } )
+    // function convert( data ){
+    //   for( let k in data ){
+    //     let realVal = data[ k ]
+    //     Object.defineProperty( data, k, {
+    //       get(){
+    //         console.log('我被访问了');
+    //         return realVal
+    //       },
+    //       set( newVal ){
+    //         console.log('我被改变了');
+    //         realVal = newVal
+    //       }
+    //     } )
+    //   }
+    // }
+    // convert( obj )
+
+    Object.defineProperty(obj, 'foo', {
+      get() {
+        console.log('我被访问了');
+        return 'hahah'
+      },
+      set(newVal) {
+        console.log('我被改变了', newVal);
       }
-    }
-    convert( obj )
+    })
   </script>
 </body>
 </html>

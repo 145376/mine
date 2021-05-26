@@ -7,8 +7,9 @@
   <title>Document</title>
 </head>
 <body>
+  <!-- <input type="text"> -->
   <p></p>
-  <button>点击修改姓名</button>
+  <button>点击改变</button>
   <script>
     let state = {
       name: 'zs',
@@ -39,7 +40,7 @@
         Object.defineProperty( data, v, {
           get(){
             //收集依赖
-            console.log('属性被访问了');
+            console.log('属性被访问了', v);
             dep.depend()
             return realVal
           },
@@ -67,16 +68,27 @@
 
     obersver( state )
 
-    document.querySelector('button').onclick = () => {
+    
+    // let input = document.querySelector('input')
+    // input.value = state.name
+    // input.oninput = (e) => {
+    //   autorun( () => {
+    //     state.name = e.target.value
+    //   } )
+    // }
+        
+    let p = document.querySelector('p')
+    render()
+    let button = document.querySelector('button')
+    button.onclick = () => {
       state.name = 'ls'
     }
-
     function render(){
-      document.querySelector('p').innerText = state.name
+      p.innerText = state.name
     }
 
     autorun( render )
-  
+    
   </script>
 </body>
 </html>

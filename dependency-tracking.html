@@ -21,7 +21,7 @@
       }
 
       notify(){
-        subscribes.forEach( v => v() );
+        this.subscribes.forEach( v => v() );
       }
     }
 
@@ -29,7 +29,6 @@
 
     function autorun( update ){
       function wrappUpdate(){
-        //因为js是单线程, 所以用变量储存当前正在运行的函数
         activeUpdate = wrappUpdate
         update()
         activeUpdate = null
